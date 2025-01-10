@@ -71,6 +71,7 @@ class CreateUserRequest(BaseModel):
     last_name: str
     password: str
     role: str
+    phone_number: str
 
 
 class Token(BaseModel):
@@ -86,6 +87,7 @@ async def create_user(db: db_dependency,create_user_request: CreateUserRequest):
         first_name=create_user_request.first_name,
         last_name=create_user_request.last_name,
         role=create_user_request.role,
+        phone_number=create_user_request.phone_number,
         hashed_password=bcrypt_context.hash(create_user_request.password),
         is_active=True
     )
@@ -105,18 +107,18 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
 
 
 # ### Exercise by myself
-# class LogInRequest(BaseModel):
-#     username: str
-#     password: str
-#
-# @router.post("/me/token",response_model=Token,status_code=status.HTTP_201_CREATED)
-# async def login_for_access_token(user_data: LogInRequest , db: db_dependency):
-#     user = authenticate_user(user_data.username,user_data.password,db)
-#     if not user:
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Could not valid user!")
-#
-#     token = create_access_token(user.username,user.id,timedelta(minutes=20))
-#     return {"access_token": token, "token_type": "bearer"}
+class LogInRequest(BaseModel):
+    username: str
+    password: str
+
+@router.post("/me/token",response_model=Token,status_code=status.HTTP_201_CREATED)
+async def login_for_access_token(user_data: LogInRequest , db: db_dependency):
+    user = authenticate_user(user_data.username,user_data.password,db)
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Could not valid user!")
+
+    token = create_access_token(user.username,user.id,user.role, timedelta(minutes=20))
+    return {"access_token": token, "token_type": "bearer"}
 
 
 
