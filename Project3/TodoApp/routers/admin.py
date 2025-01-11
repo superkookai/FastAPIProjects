@@ -6,8 +6,8 @@ from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 from starlette import status
 
-from models import Todos
-from database import SessionLocal
+from TodoApp.models import Todos
+from TodoApp.database import SessionLocal
 
 from .auth import get_current_user
 

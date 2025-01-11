@@ -6,11 +6,11 @@ from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 from starlette import status
 
-from models import Users
-from database import SessionLocal
+from TodoApp.models import Users
+from TodoApp.database import SessionLocal
 
 # from .auth import get_current_user ## -> Relative import
-from routers.auth import get_current_user ## -> Absolute import
+from TodoApp.routers.auth import get_current_user ## -> Absolute import
 
 from passlib.context import CryptContext
 
